@@ -1,0 +1,34 @@
+name: ITI Full Web stack application
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+  deliverit:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+      
+    - name: build docker image and push to hub
+      uses: mr-smithers-excellent/docker-build-push@v6
+      with: 
+          image: compilereg/itifullstack
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: "${{ secrets.REPO_USERNAME }}"
+          password: "${{ secrets.REPO_PASSWORD }}"
+          tags: latest  
